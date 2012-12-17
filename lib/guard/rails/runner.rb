@@ -40,7 +40,7 @@ module Guard
       rails_options << '-u' if options[:debugger]
       rails_options << options[:server] if options[:server]
 
-      %{sh -c 'cd #{Dir.pwd} && rails s #{rails_options.join(' ')} &'}
+      %{sh -c 'cd #{Dir.pwd} && #{rails_or_zeus} s #{rails_options.join(' ')} &'}
     end
 
     def pid_file
@@ -101,6 +101,14 @@ module Guard
         count += 1
       end
       !(count == MAX_WAIT_COUNT)
+    end
+
+    def rails_or_zeus
+      if options[:zeus] == true
+        "zeus"
+      else
+        "rails"
+      end
     end
   end
 end
